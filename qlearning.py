@@ -49,6 +49,7 @@ class QLearningAgent:
         """
         value = 0.0
         # BEGIN SOLUTION
+        value = max(self.get_qvalue(state, action) for action in self.legal_actions)
         # END SOLUTION
         return value
 
@@ -64,6 +65,9 @@ class QLearningAgent:
         """
         q_value = 0.0
         # BEGIN SOLUTION
+        td_target = reward + self.gamma * self.get_value(next_state)
+        td_error = td_target - self.get_qvalue(state, action)
+        q_value = self.get_qvalue(state, action) + self.learning_rate * td_error
         # END SOLUTION
 
         self.set_qvalue(state, action, q_value)
@@ -90,6 +94,10 @@ class QLearningAgent:
         action = self.legal_actions[0]
 
         # BEGIN SOLUTION
+        if random.uniform(0, 1) < self.epsilon:
+            action = random.choice(self.legal_actions)
+        else:
+            action = self.get_best_action(state)
         # END SOLUTION
 
         return action
